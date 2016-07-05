@@ -1,0 +1,42 @@
+package test;
+
+import java.io.UnsupportedEncodingException;
+
+public class Test {
+
+ public static void main(String[] args) throws UnsupportedEncodingException {
+		String web = "测试";
+		byte[] byteArray = web.getBytes("gbk");
+		String result = new String(byteArray, "utf-8");
+		System.out.println(result);
+	}
+	
+	
+ public static void insertNewLineCharacter(List<String> list) {
+    int size = list.size();// 获取行数
+    for (int i = 0; i < size; i++) {
+      String line = list.get(i);// 获取某一行
+      if (StringUtils.trimToEmpty(line).length() > 1) {
+        char[] ca = line.toCharArray();
+        int offset = 0;
+        while (offset < ca.length) {
+          if (ca[offset] == '{' || ca[offset] == '}') {
+            if (ca[offset - 1] != '\n' && ca[offset - 1] != '\r') {// 如果之前的不是n或者r，则需要扩容
+              int oldLength = ca.length;
+              ca = Arrays.copyOf(ca, oldLength + 1);// 扩容之后数组长度也变长
+              System.arraycopy(ca, offset, ca, offset + 1, oldLength - offset);
+              ca[offset] = '\n';
+              offset++;// 因为已经后移了，所以下标也要后移
+              list.remove(i);// 删掉
+              list.add(i, new String(ca));
+
+            }
+
+          }
+          offset++;
+        }
+
+      }
+    }
+  }
+}
